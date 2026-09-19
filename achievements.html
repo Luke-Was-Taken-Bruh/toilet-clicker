@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toilet Clicker™ Achievements</title>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#111;
+  color:white;
+}
+header{
+  background:#222;
+  padding:18px;
+  text-align:center;
+  border-bottom:2px solid #444;
+}
+h1{margin:0;font-size:28px}
+#stats{
+  text-align:center;
+  padding:15px;
+  color:#bbb;
+}
+#achievements{
+  max-width:800px;
+  margin:auto;
+  padding:15px;
+}
+.achievement{
+  display:flex;
+  align-items:center;
+  gap:15px;
+  background:#1d1d1d;
+  border:1px solid #333;
+  border-radius:12px;
+  padding:15px;
+  margin:10px 0;
+}
+.icon{
+  font-size:38px;
+  width:55px;
+  text-align:center;
+}
+.info{flex:1}
+.name{
+  font-size:18px;
+  font-weight:bold;
+}
+.desc{
+  color:#aaa;
+  margin-top:4px;
+}
+.locked{
+  opacity:.4;
+}
+.unlocked{
+  border-color:#777;
+}
+.badge{
+  font-size:13px;
+  padding:6px 9px;
+  border-radius:8px;
+  background:#333;
+}
+.unlocked .badge{
+  background:#2d6a32;
+}
+button{
+  display:block;
+  margin:20px auto;
+  padding:12px 20px;
+  border:0;
+  border-radius:10px;
+  background:#333;
+  color:white;
+  font-size:16px;
+  cursor:pointer;
+}
+button:hover{background:#444}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>🏆 Toilet Clicker™ Achievements</h1>
+</header>
+
+<div id="stats"></div>
+
+<div id="achievements"></div>
+
+<button onclick="location.href='index.html'">
+  🚽 Back to Toilet Clicker
+</button>
+
+<script>
+const KEY="toiletClicker";
+
+const achievements=[
+  ["💩","First Poop","Get 1 poop.",x=>x.p>=1],
+  ["🚽","Getting Started","Get 100 poop.",x=>x.p>=100],
+  ["💩","Poop Collector","Get 1,000 poop.",x=>x.p>=1000],
+  ["🏭","Industrialized","Get 1,000,000 poop.",x=>x.p>=1e6],
+  ["💰","Billionaire","Reach 1 billion poop.",x=>x.p>=1e9],
+  ["🔄","Reborn","Perform 1 rebirth.",x=>x.rb>=1],
+  ["🔄","Looping Forever","Perform 10 rebirths.",x=>x.rb>=10],
+  ["🪙","Coin Hoarder","Get 100 Poop Coins.",x=>x.coins>=100],
+  ["🪙","Coin Goblin","Get 1,000 Poop Coins.",x=>x.coins>=1000],
+  ["🧻","Fully Stocked","Buy 10 upgrades.",x=>totalLevels(x)>=10],
+  ["⚙️","Toilet Engineer","Reach 100 total upgrade levels.",x=>totalLevels(x)>=100],
+  ["👑","Toilet Royalty","Reach 1,000 total upgrade levels.",x=>totalLevels(x)>=1000],
+  ["💀","Forbidden Knowledge","Buy the Forbidden Toilet.",x=>upgradeLevel(x,28)>=1],
+  ["🚽","THE FINAL TOILET","Buy the Final Toilet.",x=>upgradeLevel(x,29)>=1],
+  ["🌌","Beyond Comprehension","Reach 1 nonillion poop.",x=>x.p>=1e30],
+  ["☠️","What Have You Done?","Reach 1 googol poop.",x=>x.p>=1e100]
+];
+
+function getSave(){
+  try{
+    const x=JSON.parse(localStorage.getItem(KEY));
+    return x||{
+      p:0,
+      rb:0,
+      coins:0,
+      click:1,
+      sec:0,
+      lv:[]
+    };
+  }catch(e){
+    return {
+      p:0,
+      rb:0,
+      coins:0,
+      click:1,
+      sec:0,
+      lv:[]
+    };
+  }
+}
+
+function totalLevels(x){
+  return Array.isArray(x.lv)
+    ? x.lv.reduce((a,b)=>a+(Number(b)||0),0)
+    : 0;
+}
+
+function upgradeLevel(x,i){
+  return Array.isArray(x.lv)
+    ? Number(x.lv[i])||0
+    : 0;
+}
+
+function format(n){
+  if(!Number.isFinite(n))return "∞";
+
+  if(n>=1e100)return n.toExponential(2);
+  if(n>=1e30)return n.toExponential(2);
+  if(n>=1e12)return (n/1e12).toFixed(2)+"T";
+  if(n>=1e9)return (n/1e9).toFixed(2)+"B";
+  if(n>=1e6)return (n/1e6).toFixed(2)+"M";
+  if(n>=1e3)return (n/1e3).toFixed(2)+"K";
+
+  return Math.floor(n).toLocaleString();
+}
+
+function draw(){
+  const x=getSave();
+  const box=document.getElementById("achievements");
+
+  let unlocked=0;
+
+  box.innerHTML=achievements.map(a=>{
+    const ok=a[3](x);
+
+    if(ok)unlocked++;
+
+    return `
+      <div class="achievement ${ok?"unlocked":"locked"}">
+        <div class="icon">${ok?a[0]:"🔒"}</div>
+
+        <div class="info">
+          <div class="name">${a[1]}</div>
+          <div class="desc">${a[2]}</div>
+        </div>
+
+        <div class="badge">
+          ${ok?"UNLOCKED":"LOCKED"}
+        </div>
+      </div>
+    `;
+  }).join("");
+
+  document.getElementById("stats").textContent=
+    `${unlocked}/${achievements.length} achievements unlocked`;
+}
+
+draw();
+
+setInterval(draw,1000);
+</script>
+
+</body>
+</html>
