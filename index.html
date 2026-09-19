@@ -112,6 +112,11 @@ background:#b8860b;
 color:white
 }
 
+.savebtn{
+background:#3578c9;
+color:white
+}
+
 .up{
 width:100%;
 margin:4px 0;
@@ -265,9 +270,24 @@ width:calc(100% - 20px)
 🗑️ RESET
 </button>
 
-<button class="ctrl achbtn" onclick="location.href='achievements.html'">
+<button class="ctrl achbtn" id="achBtn">
 🏆 ACHIEVEMENTS
 </button>
+
+<button class="ctrl savebtn" id="exportBtn">
+💾 EXPORT SAVE
+</button>
+
+<button class="ctrl savebtn" id="importBtn">
+📂 IMPORT SAVE
+</button>
+
+<input
+type="file"
+id="importFile"
+accept=".json"
+style="display:none"
+>
 
 </div>
 
@@ -313,6 +333,10 @@ const toiletEl=document.getElementById("toilet");
 const upgradesEl=document.getElementById("upgrades");
 const rebirthBtn=document.getElementById("rebirthBtn");
 const resetBtn=document.getElementById("resetBtn");
+const achBtn=document.getElementById("achBtn");
+const exportBtn=document.getElementById("exportBtn");
+const importBtn=document.getElementById("importBtn");
+const importFile=document.getElementById("importFile");
 
 const U=[
 
@@ -350,6 +374,7 @@ const U=[
 ];
 
 let lv=Array(U.length).fill(0);
+let unlockedAchievements=[];
 
 /* ACHIEVEMENTS */
 
@@ -389,8 +414,6 @@ const achievements=[
 
 ];
 
-let unlockedAchievements=[];
-
 /* FORMAT */
 
 function fmt(n){
@@ -429,9 +452,13 @@ return U[i][1]*Math.pow(1.17,lv[i]);
 function draw(){
 
 pEl.textContent=fmt(p);
+
 pcEl.textContent=fmt(click*mult);
+
 psEl.textContent=fmt(sec*mult);
+
 coinsEl.textContent=fmt(coins);
+
 rbEl.textContent=rb;
 
 if(p>=1000000000){
@@ -474,7 +501,7 @@ upgradesEl.appendChild(b);
 
 }
 
-/* ACHIEVEMENT CHECKING */
+/* ACHIEVEMENT HELPERS */
 
 function totalLevels(x){
 
@@ -495,6 +522,8 @@ if(!Array.isArray(x.lv))return 0;
 return Number(x.lv[i])||0;
 
 }
+
+/* ACHIEVEMENT CHECK */
 
 function checkAchievements(){
 
@@ -601,7 +630,7 @@ save();
 
 /* REBIRTH */
 
-  function rebirth(){
+function rebirth(){
 
 if(p<1000000000){
 
@@ -615,15 +644,22 @@ let gain=Math.floor(
 Math.sqrt(p/1000000000)*10
 )+1;
 
+/* Coins and rebirths are separate */
+
 coins+=gain;
 
 rb+=1;
 
-/* Permanent rebirth multiplier */
+/* Permanent multiplier */
+
 mult=1+(rb*.25);
 
+/* Reset normal progression */
+
 p=0;
+
 click=1;
+
 sec=0;
 
 lv=Array(U.length).fill(0);
@@ -641,7 +677,7 @@ mult.toFixed(2)
 );
 
 }
-  
+
 /* RESET */
 
 function resetGame(){
@@ -699,19 +735,36 @@ localStorage.getItem("toiletClicker")
 
 if(!x)return;
 
-p=x.p||0;
+p=Number(x.p)||0;
 
-rb=x.rb||0;
+rb=Number(x.rb)||0;
 
-coins=x.coins||0;
+coins=Number(x.coins)||0;
 
-click=x.click||1;
+click=Number(x.click)||1;
 
-sec=x.sec||0;
+sec=Number(x.sec)||0;
 
 lv=Array.isArray(x.lv)
 ?x.lv
 :Array(U.length).fill(0);
+
+/* Make sure the upgrade array is the correct size */
+
+if(lv.length!==U.length){
+
+let old=lv;
+
+lv=Array(U.length).fill(0);
+
+old.forEach(function(v,i){
+
+if(i<U.length)
+lv[i]=Number(v)||0;
+
+});
+
+}
 
 if(Array.isArray(x.achievements)){
 
@@ -719,13 +772,99 @@ unlockedAchievements=x.achievements;
 
 }
 
-mult=1+rb*.25;
+mult=1+(rb*.25);
 
 }catch(e){
 
 console.log("Save could not be loaded.");
 
 }
+
+}
+
+/* EXPORT SAVE */
+
+function exportSave(){
+
+save();
+
+const data=localStorage.getItem("toiletClicker");
+
+const blob=new Blob(
+[data],
+{type:"application/json"}
+);
+
+const url=URL.createObjectURL(blob);
+
+const a=document.createElement("a");
+
+a.href=url;
+a.download="toilet-clicker-save.json";
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
+
+setTimeout(function(){
+
+URL.revokeObjectURL(url);
+
+},1000);
+
+}
+
+/* IMPORT SAVE */
+
+function importSave(file){
+
+const reader=new FileReader();
+
+reader.onload=function(){
+
+try{
+
+const data=JSON.parse(reader.result);
+
+/* Validate the save */
+
+if(
+typeof data.p!=="number"||
+typeof data.rb!=="number"||
+typeof data.coins!=="number"||
+typeof data.click!=="number"||
+typeof data.sec!=="number"||
+!Array.isArray(data.lv)
+){
+
+throw new Error("Invalid save");
+
+}
+
+localStorage.setItem(
+"toiletClicker",
+JSON.stringify(data)
+);
+
+load();
+
+draw();
+
+checkAchievements();
+
+alert("✅ Save imported successfully!");
+
+}catch(e){
+
+alert("❌ Invalid Toilet Clicker save file!");
+
+}
+
+};
+
+reader.readAsText(file);
 
 }
 
@@ -744,6 +883,44 @@ rebirth
 resetBtn.addEventListener(
 "click",
 resetGame
+);
+
+achBtn.addEventListener(
+"click",
+function(){
+
+location.href="achievements.html";
+
+}
+);
+
+exportBtn.addEventListener(
+"click",
+exportSave
+);
+
+importBtn.addEventListener(
+"click",
+function(){
+
+importFile.click();
+
+}
+);
+
+importFile.addEventListener(
+"change",
+function(){
+
+if(this.files.length){
+
+importSave(this.files[0]);
+
+}
+
+this.value="";
+
+}
 );
 
 /* PASSIVE PRODUCTION */
