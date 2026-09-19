@@ -601,7 +601,7 @@ save();
 
 /* REBIRTH */
 
-function rebirth(){
+  function rebirth(){
 
 if(p<1000000000){
 
@@ -619,32 +619,29 @@ coins+=gain;
 
 rb+=1;
 
-mult=1+rb*.25;
+/* Permanent rebirth multiplier */
+mult=1+(rb*.25);
 
 p=0;
-
 click=1;
-
 sec=0;
 
 lv=Array(U.length).fill(0);
 
 save();
-
 draw();
-
 checkAchievements();
 
 alert(
 "🔄 REBIRTH!\n\n"+
-"You gained "+gain+
-" 🪙 Poop Coins!\n\n"+
-"Permanent multiplier: x"+
+"You gained "+gain+" 🪙 Poop Coins!\n\n"+
+"Rebirths: "+rb+
+"\nPermanent multiplier: x"+
 mult.toFixed(2)
 );
 
 }
-
+  
 /* RESET */
 
 function resetGame(){
