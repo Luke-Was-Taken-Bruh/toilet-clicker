@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Toilet Clicker™ Admin</title>
+<style>
+*{box-sizing:border-box}
+body{
+margin:0;background:#151515;color:#fff;font:16px Arial;
+display:flex;justify-content:center;align-items:center;min-height:100vh
+}
+.box{
+width:min(500px,94vw);background:#242424;border:2px solid #555;
+border-radius:18px;padding:24px;text-align:center;
+box-shadow:0 10px 40px #0008
+}
+h1{margin:0 0 5px;color:#ff6666}
+h2{margin:20px 0 8px}
+.sub{color:#aaa;margin-bottom:20px}
+input{
+width:100%;padding:12px;border-radius:9px;border:2px solid #555;
+background:#111;color:#fff;font-size:17px;margin:5px 0
+}
+button{
+width:100%;padding:12px;margin:5px 0;border:0;border-radius:9px;
+font-weight:bold;font-size:15px;cursor:pointer;background:#444;color:#fff
+}
+button:hover{background:#555}
+.green{background:#39853c}
+.green:hover{background:#4b9e4f}
+.purple{background:#7045a8}
+.purple:hover{background:#8555c4}
+.red{background:#a83232}
+.red:hover{background:#c43d3d}
+.yellow{background:#a78325}
+.yellow:hover{background:#c49d2c}
+#admin{display:none}
+#status{
+background:#111;border-radius:10px;padding:12px;margin:12px 0;
+font-family:monospace;text-align:left;line-height:1.6
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<div id="login">
+<h1>🔐 ADMIN</h1>
+<div class="sub">Toilet Clicker™ Test Console</div>
+
+<input id="pin" type="password" inputmode="numeric"
+maxlength="4" placeholder="Enter PIN">
+
+<button class="purple" onclick="login()">UNLOCK</button>
+
+<div id="error" style="color:#ff6666;margin-top:8px"></div>
+</div>
+
+
+<div id="admin">
+
+<h1>🛠️ ADMIN CONSOLE</h1>
+<div class="sub">Developer / Test Screen</div>
+
+<div id="status"></div>
+
+<h2>💩 Give Poop</h2>
+
+<input id="poopAmount" type="number"
+placeholder="Amount of 💩">
+
+<button class="green" onclick="givePoop()">💩 GIVE POOP</button>
+
+<button class="yellow" onclick="givePoop(1000000)">
+💩 +1 MILLION
+</button>
+
+<button class="yellow" onclick="givePoop(1000000000)">
+💩 +1 BILLION
+</button>
+
+<button class="yellow" onclick="givePoop(1e100)">
+💩 +ABSURD AMOUNT
+</button>
+
+
+<h2>🪙 Poop Coins</h2>
+
+<input id="coinAmount" type="number"
+placeholder="Amount of 🪙">
+
+<button class="green" onclick="giveCoins()">🪙 GIVE COINS</button>
+
+
+<h2>🔄 Rebirths</h2>
+
+<input id="rebirthAmount" type="number"
+placeholder="Amount of rebirths">
+
+<button class="purple" onclick="giveRebirths()">🔄 GIVE REBIRTHS</button>
+
+
+<h2>🛒 Upgrade Testing</h2>
+
+<button class="green" onclick="maxUpgrades()">
+🚽 MAX ALL UPGRADES
+</button>
+
+<button class="purple" onclick="unlockOneBillion()">
+🏆 SET TO 1 BILLION POOP
+</button>
+
+
+<h2>🧹 Save Controls</h2>
+
+<button class="red" onclick="resetSave()">
+🗑️ DELETE SAVE
+</button>
+
+<button onclick="location.reload()">
+🔄 REFRESH ADMIN
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+const PIN="2801";
+const KEY="toiletClicker";
+
+const upgrades=[
+["🧻 Toilet Paper",10,1,0],
+["💦 Better Flush",50,0,1],
+["🪠 Plunger",150,3,0],
+["🚿 Bidet",500,0,5],
+["⚙️ Turbo Toilet",2000,10,10],
+["🏭 Poop Factory",10000,25,40],
+["🤖 Poop Robot",50000,75,150],
+["⚡ Mega Flush",200000,200,500],
+["🧪 Poop Lab",1000000,600,2000],
+["🌎 Global Toilet",5000000,2000,8000],
+["🛰️ Poop Satellite",20000000,8000,30000],
+["☢️ Nuclear Toilet",100000000,30000,100000],
+["🌀 Quantum Toilet",500000000,100000,400000],
+["👽 Alien Toilet",2000000000,400000,2000000],
+["🌌 Galaxy Toilet",10000000000,2000000,10000000],
+["🕳️ Black Hole Toilet",50000000000,10000000,50000000],
+["♾️ Infinite Flush",200000000000,50000000,200000000],
+["🧠 Sentient Toilet",1000000000000,200000000,1000000000],
+["👑 Royal Toilet",10000000000000,1000000000,5000000000],
+["💎 Diamond Toilet",100000000000000,5000000000,20000000000],
+["🌋 Volcano Toilet",1000000000000000,20000000000,100000000000],
+["☀️ Solar Toilet",10000000000000000,100000000000,500000000000],
+["🌠 Cosmic Toilet",100000000000000000,500000000000,2000000000000],
+["🪐 Planet Toilet",1000000000000000000,2000000000000,10000000000000],
+["🌌 Universe Toilet",1e20,1e13,5e13],
+["🛸 Multiverse Toilet",1e22,5e13,2e14],
+["⏳ Time Toilet",1e25,2e14,1e15],
+["🧬 Reality Toilet",1e28,1e15,5e15],
+["💀 Forbidden Toilet",1e32,5e15,2e16],
+["🚽 THE FINAL TOILET",1e36,2e16,1e17]
+];
+
+function login(){
+
+if(document.getElementById("pin").value===PIN){
+
+document.getElementById("login").style.display="none";
+document.getElementById("admin").style.display="block";
+update();
+
+}else{
+
+document.getElementById("error").textContent="❌ Incorrect PIN.";
+
+}
+
+}
+
+function getSave(){
+
+try{
+
+return JSON.parse(localStorage.getItem(KEY))||{
+p:0,rb:0,coins:0,click:1,sec:0,
+lv:Array(upgrades.length).fill(0)
+};
+
+}catch(e){
+
+return{
+p:0,rb:0,coins:0,click:1,sec:0,
+lv:Array(upgrades.length).fill(0)
+};
+
+}
+
+}
+
+function save(x){
+
+localStorage.setItem(KEY,JSON.stringify(x));
+update();
+
+}
+
+function update(){
+
+let x=getSave();
+
+document.getElementById("status").innerHTML=
+"💩 Poop: "+format(x.p)+
+"<br>🪙 Coins: "+format(x.coins)+
+"<br>🔄 Rebirths: "+format(x.rb)+
+"<br>💩/click: "+format(x.click)+
+"<br>⚡/sec: "+format(x.sec);
+
+}
+
+function givePoop(amount){
+
+let x=getSave();
+
+amount=amount===undefined?
+Number(document.getElementById("poopAmount").value):amount;
+
+if(!isFinite(amount)||amount<=0)return;
+
+x.p+=amount;
+
+save(x);
+
+document.getElementById("poopAmount").value="";
+
+}
+
+function giveCoins(){
+
+let x=getSave();
+
+let n=Number(document.getElementById("coinAmount").value);
+
+if(!isFinite(n)||n<=0)return;
+
+x.coins+=n;
+
+save(x);
+
+document.getElementById("coinAmount").value="";
+
+}
+
+function giveRebirths(){
+
+let x=getSave();
+
+let n=Number(document.getElementById("rebirthAmount").value);
+
+if(!isFinite(n)||n<=0)return;
+
+x.rb+=n;
+
+save(x);
+
+document.getElementById("rebirthAmount").value="";
+
+}
+
+function maxUpgrades(){
+
+let x=getSave();
+
+if(!Array.isArray(x.lv))
+x.lv=Array(upgrades.length).fill(0);
+
+x.lv=x.lv.map(()=>999);
+
+x.click=1;
+x.sec=0;
+
+for(let i=0;i<upgrades.length;i++){
+
+x.click+=upgrades[i][2]*999;
+x.sec+=upgrades[i][3]*999;
+
+}
+
+save(x);
+
+}
+
+function unlockOneBillion(){
+
+let x=getSave();
+
+x.p=1000000000;
+
+save(x);
+
+}
+
+function resetSave(){
+
+if(confirm("DELETE THE ENTIRE TOILET EMPIRE?")){
+
+localStorage.removeItem(KEY);
+
+update();
+
+}
+
+}
+
+function format(n){
+
+if(!isFinite(n))return"∞";
+
+if(n<1000)return Math.floor(n).toLocaleString();
+
+const u=["K","M","B","T","Qa","Qi","Sx","Sp","Oc","No"];
+
+let i=-1;
+
+while(n>=1000&&i<u.length-1){
+
+n/=1000;
+i++;
+
+}
+
+return n.toFixed(n<10?2:1)+u[i];
+
+}
+
+document.getElementById("pin").addEventListener("keydown",function(e){
+
+if(e.key==="Enter")login();
+
+});
+
+</script>
+
+</body>
+</html>
