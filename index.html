@@ -4,34 +4,235 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Toilet Clicker™</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:#171717;color:#fff;font:16px Arial;text-align:center;overflow:hidden}
-h1{margin:12px 0 4px;color:#8cff66}
-#stats{font-size:17px;margin-bottom:8px}
-#game{display:flex;gap:12px;height:calc(100vh - 75px);padding:8px;max-width:1000px;margin:auto}
-#left{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0}
-#right{width:330px;background:#222;border:2px solid #444;border-radius:14px;padding:8px;display:flex;flex-direction:column;min-height:0}
-#upgrades{overflow-y:auto;flex:1;padding-right:4px}
-#toilet{font-size:145px;background:#292929;border:4px solid #666;border-radius:25px;width:260px;height:260px;cursor:pointer;transition:.06s;user-select:none;display:flex;align-items:center;justify-content:center}
-#toilet:active{transform:scale(.94)}
-button{border:0;border-radius:10px;padding:10px;margin:4px;font-weight:bold;cursor:pointer}
-.ctrl{width:260px;background:#333;color:white;border:2px solid #666}
-.rebirth{background:#8b55d9;color:white}
-.reset{background:#d33;color:white}
-.up{width:100%;margin:4px 0;background:#333;color:white;text-align:left;border:1px solid #555}
-.up:hover:not(:disabled){background:#444}
-.up:disabled{opacity:.4;cursor:not-allowed}
-.name{font-weight:bold;color:#8cff66}
-.lvl{float:right;color:#aaa}
-.cost{color:#ffd85c}
-.pop{position:fixed;pointer-events:none;font-weight:bold;color:#8cff66;animation:f 1s forwards}
-@keyframes f{to{transform:translateY(-80px);opacity:0}}
+
+body{
+margin:0;
+background:#171717;
+color:#fff;
+font:16px Arial;
+text-align:center;
+overflow:hidden
+}
+
+h1{
+margin:12px 0 4px;
+color:#8cff66
+}
+
+#stats{
+font-size:17px;
+margin-bottom:8px
+}
+
+#game{
+display:flex;
+gap:12px;
+height:calc(100vh - 75px);
+padding:8px;
+max-width:1000px;
+margin:auto
+}
+
+#left{
+flex:1;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+min-width:0
+}
+
+#right{
+width:330px;
+background:#222;
+border:2px solid #444;
+border-radius:14px;
+padding:8px;
+display:flex;
+flex-direction:column;
+min-height:0
+}
+
+#upgrades{
+overflow-y:auto;
+flex:1;
+padding-right:4px
+}
+
+#toilet{
+font-size:145px;
+background:#292929;
+border:4px solid #666;
+border-radius:25px;
+width:260px;
+height:260px;
+cursor:pointer;
+transition:.06s;
+user-select:none;
+display:flex;
+align-items:center;
+justify-content:center
+}
+
+#toilet:active{
+transform:scale(.94)
+}
+
+button{
+border:0;
+border-radius:10px;
+padding:10px;
+margin:4px;
+font-weight:bold;
+cursor:pointer
+}
+
+.ctrl{
+width:260px;
+background:#333;
+color:white;
+border:2px solid #666
+}
+
+.rebirth{
+background:#8b55d9;
+color:white
+}
+
+.reset{
+background:#d33;
+color:white
+}
+
+.achbtn{
+background:#b8860b;
+color:white
+}
+
+.up{
+width:100%;
+margin:4px 0;
+background:#333;
+color:white;
+text-align:left;
+border:1px solid #555
+}
+
+.up:hover:not(:disabled){
+background:#444
+}
+
+.up:disabled{
+opacity:.4;
+cursor:not-allowed
+}
+
+.name{
+font-weight:bold;
+color:#8cff66
+}
+
+.lvl{
+float:right;
+color:#aaa
+}
+
+.cost{
+color:#ffd85c
+}
+
+.pop{
+position:fixed;
+pointer-events:none;
+font-weight:bold;
+color:#8cff66;
+animation:f 1s forwards;
+z-index:5000
+}
+
+@keyframes f{
+to{
+transform:translateY(-80px);
+opacity:0
+}
+}
+
+/* ACHIEVEMENT POPUP */
+
+#achievementPopup{
+position:fixed;
+right:20px;
+bottom:20px;
+width:330px;
+display:flex;
+align-items:center;
+gap:14px;
+padding:16px;
+background:#222;
+border:2px solid #8cff66;
+border-radius:14px;
+box-shadow:0 8px 30px #0008;
+transform:translateX(140%);
+transition:.4s;
+z-index:9999;
+text-align:left
+}
+
+#achievementPopup.show{
+transform:translateX(0)
+}
+
+#achievementIcon{
+font-size:42px;
+width:52px;
+text-align:center
+}
+
+#achievementPopup small{
+display:block;
+color:#8cff66;
+font-size:11px;
+font-weight:bold
+}
+
+#achievementName{
+display:block;
+font-size:18px;
+margin-top:4px
+}
+
 @media(max-width:700px){
-#game{flex-direction:column;height:calc(100vh - 70px)}
-#left{min-height:390px;flex:none}
-#right{width:100%;height:40vh}
-#toilet{width:220px;height:220px;font-size:120px}
+
+#game{
+flex-direction:column;
+height:calc(100vh - 70px)
+}
+
+#left{
+min-height:390px;
+flex:none
+}
+
+#right{
+width:100%;
+height:40vh
+}
+
+#toilet{
+width:220px;
+height:220px;
+font-size:120px
+}
+
+#achievementPopup{
+right:10px;
+bottom:10px;
+width:calc(100% - 20px)
+}
+
 }
 </style>
 </head>
@@ -56,8 +257,17 @@ button{border:0;border-radius:10px;padding:10px;margin:4px;font-weight:bold;curs
 
 <div id="toilet">🚽</div>
 
-<button class="ctrl rebirth" id="rebirthBtn">🔄 REBIRTH</button>
-<button class="ctrl reset" id="resetBtn">🗑️ RESET</button>
+<button class="ctrl rebirth" id="rebirthBtn">
+🔄 REBIRTH
+</button>
+
+<button class="ctrl reset" id="resetBtn">
+🗑️ RESET
+</button>
+
+<button class="ctrl achbtn" onclick="location.href='achievements.html'">
+🏆 ACHIEVEMENTS
+</button>
 
 </div>
 
@@ -67,6 +277,19 @@ button{border:0;border-radius:10px;padding:10px;margin:4px;font-weight:bold;curs
 
 <div id="upgrades"></div>
 
+</div>
+
+</div>
+
+<!-- ACHIEVEMENT POPUP -->
+
+<div id="achievementPopup">
+
+<div id="achievementIcon">🏆</div>
+
+<div>
+<small>ACHIEVEMENT UNLOCKED</small>
+<strong id="achievementName"></strong>
 </div>
 
 </div>
@@ -92,6 +315,7 @@ const rebirthBtn=document.getElementById("rebirthBtn");
 const resetBtn=document.getElementById("resetBtn");
 
 const U=[
+
 ["🧻 Toilet Paper",10,1,0],
 ["💦 Better Flush",50,0,1],
 ["🪠 Plunger",150,3,0],
@@ -122,17 +346,64 @@ const U=[
 ["🧬 Reality Toilet",1e28,1e15,5e15],
 ["💀 Forbidden Toilet",1e32,5e15,2e16],
 ["🚽 THE FINAL TOILET",1e36,2e16,1e17]
+
 ];
 
 let lv=Array(U.length).fill(0);
+
+/* ACHIEVEMENTS */
+
+const achievements=[
+
+["💩","First Poop","Get 1 poop.",x=>x.p>=1],
+
+["🚽","Getting Started","Get 100 poop.",x=>x.p>=100],
+
+["💩","Poop Collector","Get 1,000 poop.",x=>x.p>=1000],
+
+["🏭","Industrialized","Get 1,000,000 poop.",x=>x.p>=1e6],
+
+["💰","Billionaire","Reach 1 billion poop.",x=>x.p>=1e9],
+
+["🔄","Reborn","Perform 1 rebirth.",x=>x.rb>=1],
+
+["🔄","Looping Forever","Perform 10 rebirths.",x=>x.rb>=10],
+
+["🪙","Coin Hoarder","Get 100 Poop Coins.",x=>x.coins>=100],
+
+["🪙","Coin Goblin","Get 1,000 Poop Coins.",x=>x.coins>=1000],
+
+["🧻","Fully Stocked","Buy 10 upgrades.",x=>totalLevels(x)>=10],
+
+["⚙️","Toilet Engineer","Reach 100 total upgrade levels.",x=>totalLevels(x)>=100],
+
+["👑","Toilet Royalty","Reach 1,000 total upgrade levels.",x=>totalLevels(x)>=1000],
+
+["💀","Forbidden Knowledge","Buy the Forbidden Toilet.",x=>upgradeLevel(x,28)>=1],
+
+["🚽","THE FINAL TOILET","Buy the Final Toilet.",x=>upgradeLevel(x,29)>=1],
+
+["🌌","Beyond Comprehension","Reach 1 nonillion poop.",x=>x.p>=1e30],
+
+["☠️","What Have You Done?","Reach 1 googol poop.",x=>x.p>=1e100]
+
+];
+
+let unlockedAchievements=[];
+
+/* FORMAT */
 
 function fmt(n){
 
 if(!isFinite(n))return"∞";
 
-if(n<1000)return Math.floor(n).toLocaleString();
+if(n<1000)
+return Math.floor(n).toLocaleString();
 
-const units=["K","M","B","T","Qa","Qi","Sx","Sp","Oc","No"];
+const units=[
+"K","M","B","T","Qa","Qi","Sx","Sp","Oc","No",
+"De","Ud","Dd","Td","Qad","Qid","Sxd","Spd","Ocd","Nod"
+];
 
 let i=-1;
 
@@ -145,11 +416,15 @@ return n.toFixed(n<10?2:1)+units[i];
 
 }
 
+/* COST */
+
 function cost(i){
 
 return U[i][1]*Math.pow(1.17,lv[i]);
 
 }
+
+/* DRAW */
 
 function draw(){
 
@@ -160,9 +435,13 @@ coinsEl.textContent=fmt(coins);
 rbEl.textContent=rb;
 
 if(p>=1000000000){
+
 goalEl.textContent="🏆 1 BILLION POOP REACHED!";
+
 }else{
+
 goalEl.textContent="🎯 Goal: 1 Billion Poop";
+
 }
 
 upgradesEl.innerHTML="";
@@ -174,6 +453,7 @@ let c=cost(i);
 let b=document.createElement("button");
 
 b.className="up";
+
 b.disabled=p<c;
 
 b.innerHTML=
@@ -183,7 +463,9 @@ b.innerHTML=
 '<br><span class="cost">Cost: '+fmt(c)+' 💩</span>';
 
 b.onclick=function(){
+
 buy(i);
+
 };
 
 upgradesEl.appendChild(b);
@@ -191,6 +473,77 @@ upgradesEl.appendChild(b);
 });
 
 }
+
+/* ACHIEVEMENT CHECKING */
+
+function totalLevels(x){
+
+if(!Array.isArray(x.lv))return 0;
+
+return x.lv.reduce(function(a,b){
+
+return a+(Number(b)||0);
+
+},0);
+
+}
+
+function upgradeLevel(x,i){
+
+if(!Array.isArray(x.lv))return 0;
+
+return Number(x.lv[i])||0;
+
+}
+
+function checkAchievements(){
+
+const current={
+p:p,
+rb:rb,
+coins:coins,
+lv:lv
+};
+
+achievements.forEach(function(a,i){
+
+if(a[3](current)&&!unlockedAchievements.includes(i)){
+
+unlockedAchievements.push(i);
+
+showAchievement(a[0],a[1]);
+
+}
+
+});
+
+}
+
+/* ACHIEVEMENT POPUP */
+
+let achievementTimer;
+
+function showAchievement(icon,name){
+
+const popup=document.getElementById("achievementPopup");
+
+document.getElementById("achievementIcon").textContent=icon;
+
+document.getElementById("achievementName").textContent=name;
+
+popup.classList.add("show");
+
+clearTimeout(achievementTimer);
+
+achievementTimer=setTimeout(function(){
+
+popup.classList.remove("show");
+
+},4000);
+
+}
+
+/* BUY */
 
 function buy(i){
 
@@ -203,12 +556,17 @@ p-=c;
 lv[i]++;
 
 click+=U[i][2];
+
 sec+=U[i][3];
+
+checkAchievements();
 
 save();
 draw();
 
 }
+
+/* POOP */
 
 function poop(e){
 
@@ -219,21 +577,29 @@ p+=gain;
 let q=document.createElement("div");
 
 q.className="pop";
+
 q.textContent="+"+fmt(gain)+" 💩";
 
 q.style.left=(e.clientX||innerWidth/2)+"px";
+
 q.style.top=(e.clientY||innerHeight/2)+"px";
 
 document.body.appendChild(q);
 
 setTimeout(function(){
+
 q.remove();
+
 },1000);
+
+checkAchievements();
 
 draw();
 save();
 
 }
+
+/* REBIRTH */
 
 function rebirth(){
 
@@ -245,25 +611,41 @@ return;
 
 }
 
-let gain=Math.floor(Math.sqrt(p/1000000000)*10)+1;
+let gain=Math.floor(
+Math.sqrt(p/1000000000)*10
+)+1;
 
 coins+=gain;
+
 rb+=gain;
 
 mult=1+rb*.25;
 
 p=0;
+
 click=1;
+
 sec=0;
 
 lv=Array(U.length).fill(0);
 
 save();
+
 draw();
 
-alert("🔄 REBIRTH!\n\nYou gained "+gain+" 🪙 Poop Coins!\n\nPermanent multiplier: x"+mult.toFixed(2));
+checkAchievements();
+
+alert(
+"🔄 REBIRTH!\n\n"+
+"You gained "+gain+
+" 🪙 Poop Coins!\n\n"+
+"Permanent multiplier: x"+
+mult.toFixed(2)
+);
 
 }
+
+/* RESET */
 
 function resetGame(){
 
@@ -277,43 +659,68 @@ coins=0;
 click=1;
 sec=0;
 mult=1;
+
 lv=Array(U.length).fill(0);
+
+unlockedAchievements=[];
 
 save();
 draw();
 
 }
 
+/* SAVE */
+
 function save(){
 
 localStorage.setItem(
 "toiletClicker",
 JSON.stringify({
+
 p:p,
 rb:rb,
 coins:coins,
 click:click,
 sec:sec,
-lv:lv
+lv:lv,
+achievements:unlockedAchievements
+
 })
 );
 
 }
 
+/* LOAD */
+
 function load(){
 
 try{
 
-let x=JSON.parse(localStorage.getItem("toiletClicker"));
+let x=JSON.parse(
+localStorage.getItem("toiletClicker")
+);
 
 if(!x)return;
 
 p=x.p||0;
+
 rb=x.rb||0;
+
 coins=x.coins||0;
+
 click=x.click||1;
+
 sec=x.sec||0;
-lv=Array.isArray(x.lv)?x.lv:Array(U.length).fill(0);
+
+lv=Array.isArray(x.lv)
+?x.lv
+:Array(U.length).fill(0);
+
+if(Array.isArray(x.achievements)){
+
+unlockedAchievements=x.achievements;
+
+}
 
 mult=1+rb*.25;
 
@@ -325,17 +732,32 @@ console.log("Save could not be loaded.");
 
 }
 
-toiletEl.addEventListener("click",poop);
+/* EVENTS */
 
-rebirthBtn.addEventListener("click",rebirth);
+toiletEl.addEventListener(
+"click",
+poop
+);
 
-resetBtn.addEventListener("click",resetGame);
+rebirthBtn.addEventListener(
+"click",
+rebirth
+);
+
+resetBtn.addEventListener(
+"click",
+resetGame
+);
+
+/* PASSIVE PRODUCTION */
 
 setInterval(function(){
 
 if(sec>0){
 
 p+=sec*mult;
+
+checkAchievements();
 
 draw();
 save();
@@ -344,10 +766,15 @@ save();
 
 },1000);
 
+/* START */
+
 load();
+
 draw();
+
+checkAchievements();
 
 </script>
 
 </body>
-</html>
+  </html>
